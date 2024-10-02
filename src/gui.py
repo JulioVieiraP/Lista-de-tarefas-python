@@ -9,7 +9,6 @@ class TaskManagerApp:
         self.root = ctk.CTk()
         self.root.title("Meu app de Tarefas")
         self.root.geometry("500x600")
-
         ctk.set_appearance_mode("Dark")
 
         # Inicializando o gerenciador de tarefas
@@ -17,8 +16,6 @@ class TaskManagerApp:
 
         # Componentes da interface
         self.create_widgets()
-
-        self.frame_em_edição = None
 
     def create_widgets(self):
         # Cabeçalho
@@ -32,7 +29,7 @@ class TaskManagerApp:
 
         # Frame para segurar os inputs
         self.frame = ctk.CTkFrame(self.root, fg_color="transparent")
-        self.frame.pack(fill="x", expand=True, pady=10)
+        self.frame.pack(pady=10)
 
         # Campo de entrada
         self.input = ctk.CTkEntry(
@@ -40,13 +37,14 @@ class TaskManagerApp:
             font=("Garamond", 14),
             border_width=2,
             border_color="gray",
+            corner_radius=0,
             fg_color="#F0F0F0",
             text_color="gray",
             width=300,
         )
         self.input.pack(side="left", padx=10)
 
-        # botao para adicionar tarefa
+        # Botão para adicionar tarefa
         self.add_button = ctk.CTkButton(
             self.frame,
             text="Adicionar Tarefa",
@@ -60,27 +58,29 @@ class TaskManagerApp:
         self.add_button.pack(side="left", padx=10)
 
         # Frame para a lista de tarefas
-        self.task_frame = ctk.CTkFrame(self.root, fg_color="transparent")
+        self.task_frame = ctk.CTkScrollableFrame(self.root)
+        self.task_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
     def add_task(self):
-        task = self.task_entry.get()
-        if task:
+        task = self.input.get()
+        if len(task) >= 4:
             self.task_manager.add_task(task)
             self.update_task_listbox()
-            self.task_entry.delete(0, "end")
-
-    def remove_task(self):
-        # Remover a última tarefa da lista
-        self.task_manager.remove_last_task()
-        self.update_task_listbox()
+            self.input.delete(0, "end")
 
     def update_task_listbox(self):
-        # Atualiza o conteúdo do CTkTextbox com a lista de tarefas
-        self.task_textbox.configure(state="normal")
-        self.task_textbox.delete("1.0", "end")  # Limpa o conteúdo anterior
+        # Limpa o conteúdo anterior
+        for widget in self.task_frame.winfo_children():
+            widget.destroy()
+
         for task in self.task_manager.get_tasks():
-            self.task_textbox.insert("end", f"- {task}\n")
-        self.task_textbox.configure(state="disabled")
+            # Criar um frame para cada tarefa
+            task_item_frame = ctk.CTkFrame(self.task_frame, fg_color="lightgrey")
+            task_item_frame.pack(fill="x", padx=5, pady=5)
+
+            # Label para exibir a tarefa
+            task_label = ctk.CTkLabel(task_item_frame, text=task, text_color="blue")
+            task_label.pack(side="left", pady=10, padx=10)
 
     def run(self):
         self.root.mainloop()
