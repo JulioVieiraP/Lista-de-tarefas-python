@@ -18,7 +18,11 @@ class TaskManagerApp:
 
         # Criando os componentes
         self.header = Header(self.root)
+
+        # Componente de adicionar tarefa
         self.input_frame = InputFrame(self.root, self.add_task)
+
+        # Componente de Lista das tarefas
         self.task_list = TaskList(self.root)
 
     def add_task(self):
