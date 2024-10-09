@@ -5,25 +5,26 @@ from src.components.task_list import TaskList
 from src.tasks import TaskManager
 
 
-class TaskManagerApp:
+class TaskManagerApp(ctk.CTk):
     def __init__(self):
+        super().__init__()
+
         # Inicializando a janela principal
-        self.root = ctk.CTk()
-        self.root.title("Meu app de Tarefas")
-        self.root.geometry("500x600")
+        self.title("Meu app de Tarefas")
+        self.geometry("500x600")
         ctk.set_appearance_mode("Dark")
 
         # Inicializando o gerenciador de tarefas
         self.task_manager = TaskManager()
 
         # Criando os componentes
-        self.header = Header(self.root)
+        self.header = Header(self)
 
         # Componente de adicionar tarefa
-        self.input_frame = InputFrame(self.root, self.add_task)
+        self.input_frame = InputFrame(self, self.add_task)
 
         # Componente de Lista das tarefas
-        self.task_list = TaskList(self.root)
+        self.task_list = TaskList(self)
 
     def add_task(self):
         task = self.input_frame.get_task()
@@ -37,4 +38,4 @@ class TaskManagerApp:
         self.task_list.update_tasks(tasks)
 
     def run(self):
-        self.root.mainloop()
+        self.mainloop()

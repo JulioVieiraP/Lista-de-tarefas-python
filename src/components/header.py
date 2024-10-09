@@ -1,12 +1,9 @@
 import customtkinter as ctk
 
 
-class Header:
-    def __init__(self, window):
-        self.fonte_cabecalho = ctk.CTkFont("Garamond", 24, "bold")
-        self.cabecalho = ctk.CTkLabel(
-            window,
-            font=self.fonte_cabecalho,
-            text="Meu App de Tarefas",
+class Header(ctk.CTkLabel):
+    def __init__(self, window, **kwargs):
+        super().__init__(
+            window, text="Meu App de Tarefas", font=("Garamond", 24, "bold"), **kwargs
         )
-        self.cabecalho.pack(pady=20)
+        self.pack(pady=20)

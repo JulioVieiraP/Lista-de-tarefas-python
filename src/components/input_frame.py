@@ -1,14 +1,14 @@
 import customtkinter as ctk
 
 
-class InputFrame:
-    def __init__(self, window, add_task_callback):
-        self.frame = ctk.CTkFrame(window, fg_color="transparent")
-        self.frame.pack(pady=10)
+class InputFrame(ctk.CTkFrame):
+    def __init__(self, window, add_task_callback, **kwargs):
+        super().__init__(window, fg_color="transparent", **kwargs)
+        self.pack(pady=10)
 
         # Campo de entrada
         self.input = ctk.CTkEntry(
-            self.frame,
+            self,
             font=("Garamond", 14),
             border_width=2,
             border_color="gray",
@@ -21,7 +21,7 @@ class InputFrame:
 
         # Botão para adicionar tarefa
         self.add_button = ctk.CTkButton(
-            self.frame,
+            self,
             text="Adicionar Tarefa",
             fg_color="#4CAF50",
             text_color="#FFFFFF",
