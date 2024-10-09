@@ -1,8 +1,9 @@
 import customtkinter as ctk
+from src.Models import Task
 
 
 class InputFrame(ctk.CTkFrame):
-    def __init__(self, window, add_task_callback, **kwargs):
+    def __init__(self, window, **kwargs):
         super().__init__(window, fg_color="transparent", **kwargs)
         self.pack(pady=10)
 
@@ -32,10 +33,14 @@ class InputFrame(ctk.CTkFrame):
         )
         self.add_button.pack(side="left", padx=10)
 
-        self.add_task_callback = add_task_callback
+        # Janela principal
+        self.window = window
 
     def add_task(self):
         task_title = self.input.get()
         if len(task_title) >= 4:
-            self.add_task_callback(task_title)
+            # Cria a tarefa diretamente no banco de dados
+            Task.create(title=task_title, complete=False)
             self.input.delete(0, "end")
+            # Atualiza a lista de tarefas
+            self.window.task_list.update_tasks()

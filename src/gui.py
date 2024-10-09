@@ -18,14 +18,10 @@ class TaskManagerApp(ctk.CTk):
         self.header = Header(self)
 
         # Componente de adicionar tarefa
-        self.input_frame = InputFrame(self, self.add_task)
+        self.input_frame = InputFrame(self)
 
         # Componente de Lista das tarefas
         self.task_list = TaskList(self)
-
-    def add_task(self, task_title):
-        Task.create(title=task_title, complement=False)
-        self.task_list.update_tasks()
 
     def run(self):
         self.mainloop()
