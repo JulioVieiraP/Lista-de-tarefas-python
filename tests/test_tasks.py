@@ -1,24 +1,45 @@
-from src.tasks import TaskManager
+import pytest
+from src.Models import Task
 
-task_manager = TaskManager()
+
+@pytest.fixture(autouse=True)
+def setup_db():
+    # Limpa o banco de dados antes de cada teste
+    Task.delete().execute()
+
+    # executa os testes
+    yield
+
+    # Limpa o banco de dados após cada teste
+    Task.delete().execute()
 
 
 def test_add_task():
-    task_manager.add_task("tarefa 1")
+    # Adiciona uma nova tarefa
+    Task.create(title="tarefa 1", complete=False)
 
-    assert task_manager.get_tasks() == ["tarefa 1"]
+    tasks = Task.select()
+    assert len(tasks) == 1
+    assert tasks[0].title == "tarefa 1"
 
 
 def test_remove_task():
-    task_manager.add_task("tarefa 2")
-    task_manager.remove_last_task()
+    # Adiciona uma nova tarefa
+    Task.create(title="tarefa 2")
 
-    assert task_manager.get_tasks() == ["tarefa 1"]
+    # Remove a tarefa adicionada
+    Task.delete().where(Task.title == "tarefa 2").execute()
+
+    tasks = Task.select()
+    assert len(tasks) == 0
 
 
 def test_get_all_tasks():
-    task_manager.add_task("tarefa 3")
-    task_manager.add_task("tarefa 4")
-    print(task_manager.get_tasks())
+    # Adiciona várias tarefas
+    Task.create(title="tarefa 3")
+    Task.create(title="tarefa 4")
 
-    assert len(task_manager.get_tasks()) == 3
+    tasks = Task.select()
+    assert len(tasks) == 2
+    assert tasks[0].title == "tarefa 3"
+    assert tasks[1].title == "tarefa 4"
