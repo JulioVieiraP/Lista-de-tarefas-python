@@ -28,12 +28,14 @@ class InputFrame(ctk.CTkFrame):
             corner_radius=0,
             width=115,
             font=("Roboto", 11),
-            command=add_task_callback,
+            command=self.add_task,
         )
         self.add_button.pack(side="left", padx=10)
 
-    def get_task(self):
-        return self.input.get()
+        self.add_task_callback = add_task_callback
 
-    def clear_input(self):
-        self.input.delete(0, "end")
+    def add_task(self):
+        task_title = self.input.get()
+        if len(task_title) >= 4:
+            self.add_task_callback(task_title)
+            self.input.delete(0, "end")
