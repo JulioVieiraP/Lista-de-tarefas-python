@@ -15,12 +15,21 @@ class TaskList(ctk.CTkScrollableFrame):
 
         for task in Task.select():
             # Criar um frame para cada tarefa
-            task_item_frame = ctk.CTkFrame(self, fg_color="lightgrey")
+            task_item_frame = ctk.CTkFrame(self, fg_color="#F0F0F0")
             task_item_frame.pack(fill="x", padx=5, pady=5)
+
+            task_item_frame.bind(
+                "<Button-1>", lambda e, task=task: self.toggle_complete(task)
+            )
+
+            # Estilo de texto riscado se a tarefa estiver completa
+            text_style = (
+                ("Roboto", 16, "overstrike") if task.complete else ("Roboto", 16)
+            )
 
             # Label para exibir a tarefa
             task_label = ctk.CTkLabel(
-                task_item_frame, text=task.title, text_color="blue"
+                task_item_frame, text=task.title, text_color="#333", font=text_style
             )
             task_label.pack(side="left", pady=10, padx=10)
 
@@ -31,6 +40,14 @@ class TaskList(ctk.CTkScrollableFrame):
                 command=lambda task_id=task.id: self.delete_task(task_id),
             )
             delete_button.pack(side="right", padx=10)
+
+    def toggle_complete(self, task):
+        # Alterna o valor do campo 'complete'
+        task.complete = not task.complete
+        task.save()
+
+        # Atualiza a lista de tarefas
+        self.update_tasks()
 
     def delete_task(self, task_id):
         # Deletando a tarefa do banco de dados
