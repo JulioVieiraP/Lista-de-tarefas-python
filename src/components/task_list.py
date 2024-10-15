@@ -14,13 +14,11 @@ class TaskList(ctk.CTkScrollableFrame):
             widget.destroy()
 
         for task in Task.select():
-            # Criar um frame para cada tarefa
-            task_item_frame = ctk.CTkFrame(self, fg_color="#F0F0F0")
-            task_item_frame.pack(fill="x", padx=5, pady=5)
+            task_style = ("#4CAF50") if task.complete else ("#F0F0F0")
 
-            task_item_frame.bind(
-                "<Button-1>", lambda e, task=task: self.toggle_complete(task)
-            )
+            # Criar um frame para cada tarefa
+            task_item_frame = ctk.CTkFrame(self, fg_color=task_style)
+            task_item_frame.pack(fill="x", padx=5, pady=5)
 
             # Estilo de texto riscado se a tarefa estiver completa
             text_style = (
@@ -33,6 +31,9 @@ class TaskList(ctk.CTkScrollableFrame):
             )
             task_label.pack(side="left", pady=10, padx=10)
 
+            self.bind_click_event(task_item_frame, task)
+            self.bind_click_event(task_label, task)
+
             delete_button = ctk.CTkButton(
                 task_item_frame,
                 text="Excluir",
@@ -40,6 +41,9 @@ class TaskList(ctk.CTkScrollableFrame):
                 command=lambda task_id=task.id: self.delete_task(task_id),
             )
             delete_button.pack(side="right", padx=10)
+
+    def bind_click_event(self, window, task):
+        window.bind("<Button-1>", lambda e: self.toggle_complete(task))
 
     def toggle_complete(self, task):
         # Alterna o valor do campo 'complete'

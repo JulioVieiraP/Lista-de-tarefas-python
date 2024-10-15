@@ -20,6 +20,8 @@ class InputFrame(ctk.CTkFrame):
         )
         self.input.pack(side="left", padx=10)
 
+        self.input.bind("<Return>", lambda e: self.add_task())
+
         # Botão para adicionar tarefa
         self.add_button = ctk.CTkButton(
             self,
